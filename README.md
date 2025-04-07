@@ -1,0 +1,24 @@
+# Classifying Real versus Imagined Motor Imagery
+
+Our project aims to classify EEG signals from the [EEG Motor Movement/Imagery Dataset](https://www.physionet.org/content/eegmmidb/1.0.0/) to distinguish between real and imagined motor movements. This research has potential applications in controlling prosthetic limbs, where users with motor impairments could use motor imagery-based BCIs to generate movement commands, enabling hands-free control of robotic prosthetics through brain activity alone.
+
+## Introduction
+
+Individuals with motor impairments often rely on assistive technologies for mobility, and Brain-Computer Interfaces (BCIs) allow a greater degree of control of prosthetic limbs using brain activity alone. BCI technology is still relatively limited in its use in prosthetic limbs, but reading motor imagery directly from EEG data is a potential way to incorporate brain signals directly into prosthetic control. This project aims to prove the feasiibility in reading that data and categorizing the type of data it is receiving by classifying between real and imagined motor movement.
+
+To do this, we developed a machine-learning based approach to classify EEG signals into real vs. imagined motor movements. We focused on the Alpha (8-12 Hz) and Beta (13-30 Hz) ranges as the primary features for classification. The two methods we used were temporal and power spectral classification of the EEG data. Each subject's data was split into training and testing data, and we chose a SVM to serve as a robust classifier even with a small dataset per subject.    
+
+## Dataset
+The dataset, published by Gerwin Schalk at the New York State Department of Health, consists of 109 participants, recorded the 64 EEG channels under the 10-10 system across 14 trials per subject. The data was sampled at 160 Hz. The trials each had a number of epochs, in which the subject performed some task, either resting or doing some movement, either real or imagined. Depending on which trial the subject is on, they are either asked to do a real movement or an imagined movement. 
+
+## Methods & Results
+The exploratory data analysis of the temporal EEG data involved filtering the data to the Alpha, Beta, and Gamma (30-79 Hz) ranges and plotting the motor, premotor, and somatosensory cortex temporal data. The plots suggested there may be some patterns to the data when transitioning between active and resting events, and an attenuation in signal strength during movement epochs. This suggested a temporal classifier could work well as a classifier. After shaping the data to use the 4 seconds after an epoch event as the feature representing each epoch as samples for the classifier, I trained the SVM on each subject after doing a 2/3 - 1/3 train-test split, randomized in time to prevent temporal overfitting. The results showed at-chance performance with only bandpass filtering across Alpha, Beta, and Gamma bands.
+
+To improve this, I used the common spatial pattern (CSP) filtering algorithm to increase the variance between real and imagined trials. After this change, the accuracy of both the alpha-filtered and beta-filtered data improved to around 75% chance on average between all 109 subjects when using all 64 channels, which is pretty good for a BCI at today's standards.
+
+The second method of classification involved looking at the power spectral density of each epoch and using that as the means of distinguishing between imagined and real movement. To do this, we computed the PSD and filtered by the three bands, but kept all channels for this experiment, then trained the SVM on individual subjects. The alpha and beta bands were similar and, on average, better than chance. However, the SD includes the 50% mark, so it isn't clear if this is truly above chance. Overall, the results were worse than the CSP filtered temporal classification.
+
+## Conclusion
+It seems there is potential for BCI usage in motor imagery classification but there can still be further improvements to our methods. Alpha and Beta bands showed unexpected similarity in classification performance, but inter-subject variability remains a challenge as the deviation between subject accuracies was very high.Instead of analyzing raw power alone, we could have extracted additional features such as band coherence or phase synchronization between channels, which might better capture differences between real and imagined movements. 
+
+Some future exploration could involve investigating temporal factors such as mental fatigue by training the SVM on early-trial data and testing on later-trial, instead of time-shuffling as we did here. Using transfer learning or adaptive ML techniques to personalize classifiers based on individual’s unique EEG patterns and real-time behavior are other potential avenues that could enhance accuracy even further.
