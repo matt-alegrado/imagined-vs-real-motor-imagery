@@ -1,5 +1,4 @@
-# Classifying Real versus Imagined Motor Imagery
-
+# Motor Imagery EEG Classification for Neural Interfaces
 Our project aims to classify EEG signals from the [EEG Motor Movement/Imagery Dataset](https://www.physionet.org/content/eegmmidb/1.0.0/) to distinguish between real and imagined motor movements. This research has potential applications in controlling prosthetic limbs, where users with motor impairments could use motor imagery-based BCIs to generate movement commands, enabling hands-free control of robotic prosthetics through brain activity alone.
 
 ## Introduction
